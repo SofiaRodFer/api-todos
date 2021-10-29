@@ -43,14 +43,16 @@ app.post('/users', (request, response) => {
     return response.status(400).json({error: "User already exists"})
   }
 
-  users.push({
+  const newUser = {
     id: uuidv4(),
     name,
     username,
     todos: []
-  })
+  }
 
-  return response.status(201).send()
+  users.push(newUser)
+
+  return response.status(201).json(newUser)
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
@@ -61,7 +63,8 @@ app.get('/todos', checksExistsUserAccount, (request, response) => {
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
-  const { title, deadline, username } = request.body
+  const { title, deadline } = request.body
+  const { username } = request.headers
 
   const currentUser = users.find(user => user.username === username)
 
@@ -90,13 +93,13 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const currentTodo = currentUser.todos.find(todo => todo.id === request.params.id)
 
   if(!currentTodo) {
-    return response.status(400).json({error: "ID does not match any current todos"})
+    return response.status(404).json({error: "ID does not match any existing todos"})
   }
   
   currentTodo.title = title
   currentTodo.deadline = new Date(deadline)
 
-  return response.status(201).json(currentTodo)
+  return response.status(200).json(currentTodo)
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
@@ -106,12 +109,12 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
   const currentTodo = currentUser.todos.find(todo => todo.id === request.params.id)
 
   if(!currentTodo) {
-    return response.status(400).json({error: "ID does not match any current todos."})
+    return response.status(404).json({error: "ID does not match any existing todos."})
   }
   
   currentTodo.done = true
 
-  return response.status(201).json(currentTodo)
+  return response.status(200).json(currentTodo)
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
@@ -121,13 +124,12 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
   const currentTodo = currentUser.todos.find(todo => todo.id === request.params.id)
 
   if(!currentTodo) {
-    return response.status(400).json({error: "ID does not match any current todos."})
+    return response.status(404).json({error: "ID does not match any existing todos."})
   }
   
-  console.log(currentUser.todos)
   currentUser.todos.splice(currentTodo, 1)
 
-  return response.status(200).send()
+  return response.status(204).send()
 });
 
 app.listen(3333);
