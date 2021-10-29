@@ -6,7 +6,7 @@
   "author": "Sofia <sofiarodrigues45@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon src/index.js",
     "test": "jest"
   },
   "dependencies": {
