@@ -66,21 +66,38 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 
   const currentUser = users.find(user => user.username === username)
 
-  const todo = {
-    id: uuidv4(),
-    title,
-    done: false,
-    deadline: new Date(deadline),
-    created_at: new Date()
+  if(currentUser) {
+    const todo = {
+      id: uuidv4(),
+      title,
+      done: false,
+      deadline: new Date(deadline),
+      created_at: new Date()
+    }
+  
+    currentUser.todos.push(todo)
+  
+    return response.status(201).json(todo)
   }
 
-  currentUser.todos.push(todo)
-
-  response.status(201).json(todo)
+  return response.status(400).json({error: "User not found"})
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { username } = request.headers
+  const { title, deadline } = request.body
+
+  const currentUser = users.find(user => user.username === username)
+  const currentTodo = currentUser.todos.find(todo => todo.id === request.params.id)
+
+  if(!currentTodo) {
+    return response.status(400).json({error: "ID does not match any current todos."})
+  }
+  
+  currentTodo.title = title
+  currentTodo.deadline = new Date(deadline)
+
+  return response.status(201).json(currentTodo)
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
