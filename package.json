@@ -1,0 +1,22 @@
+{
+  "name": "api-todos",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/SofiaRodFer/api-todos.git",
+  "author": "Sofia <sofiarodrigues45@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon",
+    "test": "jest"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1",
+    "nodemon": "^2.0.14",
+    "supertest": "^6.1.6"
+  }
+}
