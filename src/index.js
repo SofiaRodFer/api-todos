@@ -30,7 +30,6 @@ function checksExistsUserAccount(request, response, next) {
     const { username } = request.headers
     userProcessing(username)
   }
-
 }
 
 app.post('/users', (request, response) => {
@@ -91,7 +90,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const currentTodo = currentUser.todos.find(todo => todo.id === request.params.id)
 
   if(!currentTodo) {
-    return response.status(400).json({error: "ID does not match any current todos."})
+    return response.status(400).json({error: "ID does not match any current todos"})
   }
   
   currentTodo.title = title
@@ -101,11 +100,34 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { username } = request.headers
+
+  const currentUser = users.find(user => user.username === username)
+  const currentTodo = currentUser.todos.find(todo => todo.id === request.params.id)
+
+  if(!currentTodo) {
+    return response.status(400).json({error: "ID does not match any current todos."})
+  }
+  
+  currentTodo.done = true
+
+  return response.status(201).json(currentTodo)
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { username } = request.headers
+
+  const currentUser = users.find(user => user.username === username)
+  const currentTodo = currentUser.todos.find(todo => todo.id === request.params.id)
+
+  if(!currentTodo) {
+    return response.status(400).json({error: "ID does not match any current todos."})
+  }
+  
+  console.log(currentUser.todos)
+  currentUser.todos.splice(currentTodo, 1)
+
+  return response.status(200).send()
 });
 
 app.listen(3333);
