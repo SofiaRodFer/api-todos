@@ -13,7 +13,7 @@
 <br>
 
 <p align="center">
-  <img alt="Xadrez Preview" src="src/banner.PNG" width="100%">
+  <img alt="Preview" src="src/banner.PNG" width="100%">
 </p>
 
 ## 🛠️ Instalação e execução
